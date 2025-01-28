@@ -1,23 +1,61 @@
 // const Folder = (props) => {  // this is also method to write props and then destructure to get explorer
 
+import { useState } from "react";
+
 // };
 
 function Folder({ explorer }) {
+  const [expand, setExpand] = useState(false);
+  const [showInput, setShowInput] = useState({
+    visible: false,
+    isFolder: false,
+  });
+  const handleNewFolder = (e, isFolder) => {
+    e.stopPropagation();
+    setExpand(true);
+
+    setShowInput({
+      visible: true,
+      isFolder: isFolder,
+    });
+  };
+  const onAddFolder = (e) => {
+    if (e.keyCode == 13 && e.target.value) {
+      setShowInput({ ...setShowInput, visible: false });
+    }
+  };
   if (explorer.isFolder) {
     return (
       <div style={{ marginTop: 5 }}>
-        <div>
+        <div className="folder" onClick={() => setExpand(!expand)}>
           <span>📁 {explorer.name}</span>
+
+          <div>
+            <button onClick={(e) => handleNewFolder(e, true)}>Folder +</button>
+            <button onClick={(e) => handleNewFolder(e, false)}>File +</button>
+          </div>
         </div>
-        <div>
+        <div style={{ display: expand ? "block" : "none", paddingLeft: 25 }}>
+          {showInput.visible && (
+            <div className="inputContainer">
+              <span>{showInput.isFolder ? "📁" : "📄"}</span>
+              <input
+                onKeyDown={onAddFolder}
+                type="text"
+                onBlur={() => setShowInput({ ...showInput, visible: false })}
+                autoFocus
+                className="inputContainer__input"
+              />
+            </div>
+          )}
           {explorer.items.map((item) => {
-            return <span>{item.name}</span>;
+            return <Folder key={item.id} explorer={item} />;
           })}
         </div>
       </div>
     );
   } else {
-    return <span>📄 {explorer.name}</span>;
+    return <span className="file">📄 {explorer.name}</span>;
   }
 }
 
