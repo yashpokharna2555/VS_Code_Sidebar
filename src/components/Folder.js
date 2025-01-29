@@ -4,7 +4,7 @@ import { useState } from "react";
 
 // };
 
-function Folder({ explorer }) {
+function Folder({ handleInsertNode = () => {}, explorer }) {
   const [expand, setExpand] = useState(false);
   const [showInput, setShowInput] = useState({
     visible: false,
@@ -21,6 +21,7 @@ function Folder({ explorer }) {
   };
   const onAddFolder = (e) => {
     if (e.keyCode == 13 && e.target.value) {
+      handleInsertNode(explorer.id, e.target.value, showInput.isFolder);
       setShowInput({ ...setShowInput, visible: false });
     }
   };
@@ -49,7 +50,13 @@ function Folder({ explorer }) {
             </div>
           )}
           {explorer.items.map((item) => {
-            return <Folder key={item.id} explorer={item} />;
+            return (
+              <Folder
+                handleInsertNode={handleInsertNode}
+                key={item.id}
+                explorer={item}
+              />
+            );
           })}
         </div>
       </div>
