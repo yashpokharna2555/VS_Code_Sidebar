@@ -16,7 +16,22 @@ const useTraverseTree = () => {
     return { ...tree, items: latestNode };
   }
 
-  const deleteNode = () => {};
+  const deleteNode = (tree, nodeId) => {
+    if (!tree) return null;
+
+    if (tree.id === nodeId) {
+      return null; // Remove the node by returning null
+    }
+
+    // Create a new object instead of modifying the original tree
+    return {
+      ...tree,
+      items: tree.items
+        .map((item) => deleteNode(item, nodeId))
+        .filter((item) => item !== null),
+    };
+  };
+
   const updateNode = () => {};
 
   return { insertNode, deleteNode, updateNode };

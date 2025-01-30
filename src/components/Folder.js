@@ -4,7 +4,7 @@ import { useState } from "react";
 
 // };
 
-function Folder({ handleInsertNode = () => {}, explorer }) {
+function Folder({ handleInsertNode, handleDeleteNode, explorer }) {
   const [expand, setExpand] = useState(false);
   const [showInput, setShowInput] = useState({
     visible: false,
@@ -25,6 +25,11 @@ function Folder({ handleInsertNode = () => {}, explorer }) {
       setShowInput({ ...setShowInput, visible: false });
     }
   };
+
+  const onDeleteFolder = (e) => {
+    e.stopPropagation();
+    handleDeleteNode(explorer.id);
+  };
   if (explorer.isFolder) {
     return (
       <div style={{ marginTop: 5 }}>
@@ -34,6 +39,7 @@ function Folder({ handleInsertNode = () => {}, explorer }) {
           <div>
             <button onClick={(e) => handleNewFolder(e, true)}>Folder +</button>
             <button onClick={(e) => handleNewFolder(e, false)}>File +</button>
+            <button onClick={(e) => onDeleteFolder(e)}>Delete 🗑️</button>
           </div>
         </div>
         <div style={{ display: expand ? "block" : "none", paddingLeft: 25 }}>
@@ -53,6 +59,7 @@ function Folder({ handleInsertNode = () => {}, explorer }) {
             return (
               <Folder
                 handleInsertNode={handleInsertNode}
+                handleDeleteNode={handleDeleteNode}
                 key={item.id}
                 explorer={item}
               />
